@@ -1,8 +1,9 @@
 module Tree
   (
-    Tree(..),
-    BasicOps(..)
+    Tree(..)
   ) where
+
+import BasicOps
 
 data Tree a = Empty
   | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)
@@ -43,14 +44,4 @@ instance BasicOps Tree where
 
   inorder Empty = []
   inorder (Node a l r) = inorder l ++ [a] ++ inorder r
-
-class BasicOps t where
-  insert :: (Ord a) => a -> t a -> t a
-  delete :: (Ord a) => a -> t a -> Maybe (t a)
-  search :: (Ord a) => a -> t a -> Maybe a
-  contains :: (Ord a) => a -> t a -> Bool
-  contains x t = case search x t of
-    Just _ -> True
-    Nothing -> False
-  inorder :: t a -> [a]
 

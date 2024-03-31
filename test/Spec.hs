@@ -1,5 +1,6 @@
 import Test.Hspec
 import Tree
+import BasicOps
 
 main :: IO ()
 main = hspec $ do
@@ -22,3 +23,5 @@ main = hspec $ do
    it "performs an inorder traversal" $ do
      let tree = foldr insert Empty [5, 3, 7, 1, 4, 6, 8]
      inorder tree `shouldBe` [1, 3, 4, 5, 6, 7, 8]
+
+

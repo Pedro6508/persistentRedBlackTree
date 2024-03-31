@@ -1,6 +1,10 @@
 module Main (main) where
 
-import Lib
+import Tree
+import BasicOps
 
 main :: IO ()
-main = someFunc
+main = do
+  print "Hello, World!"
+  let tree = foldr insert Empty [5, 3, 7, 1, 4, 6, 8]
+  print $ inorder tree
