@@ -27,6 +27,7 @@ library
   exposed-modules:
       BasicOps
       Lib
+      RedBlack
       Tree
   other-modules:
       Paths_redBlackTree
@@ -57,6 +58,8 @@ test-suite redBlackTree-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      RedBlackSpec
+      TreeSpec
       Paths_redBlackTree
   autogen-modules:
       Paths_redBlackTree
