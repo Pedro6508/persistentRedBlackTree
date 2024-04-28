@@ -11,17 +11,20 @@ class RedBlackOps t where
   leftRotate :: t a -> t a
   rightRotate :: t a -> t a
 
-data Color = Black
-  | Red deriving (Show, Read, Eq)
+data Color = B
+  | R deriving (Show, Read, Eq)
 
 newtype RedBlack a = RedBlack (Tree (a, Color)) deriving (Show, Eq)
+leaf :: a -> Color -> Tree (a, Color)
+leaf x c = N (x, c) E E
 
 instance BasicOps RedBlack where
   insert x (RedBlack t)
-    | t == Empty = RedBlack (Node (x, Black) Empty Empty)
-    | t@(Node (a, Black) Empty Empty) <- t = if x < a
-      then RedBlack (Node (a, Black) (Node (x, Red) Empty Empty) Empty)
-      else RedBlack (Node (a, Black) Empty (Node (x, Red) Empty Empty))
+    | t == E = RedBlack (N (x, B) E E)
+    | t@(N (a, B) E E) <- t = if x < a
+      then RedBlack (N (a, B) x' E)
+      else RedBlack (N (a, B) E x')
+      where x' = leaf x R
   delete x (RedBlack t) = undefined
   search x (RedBlack t) = undefined
   inorder (RedBlack t) = undefined

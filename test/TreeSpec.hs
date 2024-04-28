@@ -8,7 +8,7 @@ import Tree
 import BasicOps
 
 populateTree :: [Int] -> Tree Int
-populateTree = foldr insert Empty
+populateTree = foldr insert E
 
 treeSpec :: SpecWith ()
 treeSpec = describe "Tree" $ do
