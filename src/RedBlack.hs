@@ -14,12 +14,12 @@ class RedBlackOps t where
 data Color = Black
   | Red deriving (Show, Read, Eq)
 
-newtype RedBlack a = RedBlack (Tree a, Color) deriving (Show, Eq)
+newtype RedBlack a = RedBlack (Tree (a, Color)) deriving (Show, Eq)
 
 instance BasicOps RedBlack where
-  insert x rt@(RedBlack (t, c))
-    | t == Empty = RedBlack (Node x Empty Empty, Black)
+  insert x (RedBlack t)
+    | t == Empty = RedBlack (Node (x, Black) Empty Empty)
     | otherwise = undefined
-  delete x (RedBlack (t, c)) = undefined
-  search x (RedBlack (t, c)) = undefined
-  inorder (RedBlack (t, c)) = undefined
+  delete x (RedBlack t) = undefined
+  search x (RedBlack t) = undefined
+  inorder (RedBlack t) = undefined
