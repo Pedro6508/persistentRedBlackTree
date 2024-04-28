@@ -2,6 +2,7 @@ module RedBlack
   (
     RedBlack(..),
     Color(..),
+    balance
   ) where
 
 import BasicOps
@@ -17,6 +18,14 @@ data Color = B
 newtype RedBlack a = RedBlack (Tree (a, Color)) deriving (Show, Eq)
 leaf :: a -> Color -> Tree (a, Color)
 leaf x c = N (x, c) E E
+
+balance :: Tree (a, Color) -> RedBlack a
+balance (N (z, B) (N (y, R) (N (x, R) a b) c) d)
+	= RedBlack (N (y, R) left right)
+	where
+		left = N (x, B) a b
+		right = N (z, B) c d
+balance _ = undefined
 
 instance BasicOps RedBlack where
   insert x (RedBlack t)
