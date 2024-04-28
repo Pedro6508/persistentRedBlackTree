@@ -2,7 +2,6 @@ module RedBlack
   (
     RedBlack(..),
     Color(..),
-    RedBlackOps(..)
   ) where
 
 import BasicOps
@@ -12,11 +11,15 @@ class RedBlackOps t where
   leftRotate :: t a -> t a
   rightRotate :: t a -> t a
 
-instance RedBlackOps RedBlack where
-  leftRotate = undefined
-  rightRotate = undefined
+data Color = Black
+  | Red deriving (Show, Read, Eq)
 
-data Color a = Black a
-  | Red a deriving (Show, Read, Eq)
+newtype RedBlack a = RedBlack (Tree a, Color) deriving (Show, Eq)
 
-newtype RedBlack a = Tree (Color a) deriving (Show, Read, Eq)
+instance BasicOps RedBlack where
+  insert x rt@(RedBlack (t, c))
+    | t == Empty = RedBlack (Node x Empty Empty, Black)
+    | otherwise = undefined
+  delete x (RedBlack (t, c)) = undefined
+  search x (RedBlack (t, c)) = undefined
+  inorder (RedBlack (t, c)) = undefined
