@@ -4,12 +4,12 @@ import BasicOps
 
 import RedBlackSpec
 import TreeSpec
-import PersistenceSpec
+import PersistenceSpec (persistenceSpec, persistentTreeSpec)
 
 main :: IO ()
 main = hspec $ do
   treeSpec
   rbSpec
   persistenceSpec
-
+  persistentTreeSpec
 

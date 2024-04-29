@@ -10,6 +10,6 @@ class PartialPersistentOps t where
   patchLast :: t a -> (a -> a) -> t a
 
 instance PartialPersistentOps Version where
-  history x (Version (f, Nothing)) = [f x]
+  history x (Version (f, Nothing)) = [x, f x]
   history x (Version (f, Just p)) = (history x p) ++ [f x]
   patchLast v@(Version (f, _)) g = Version (g . f, Just v)
