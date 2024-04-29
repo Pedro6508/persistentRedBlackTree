@@ -18,9 +18,7 @@ treeSpec = describe "Tree" $ do
   it "deletes a value" $ do
     let tree = populateTree [8, 7, 6, 5, 1]
     let newTree = delete 5 tree
-    case newTree of
-      Just t -> contains 5 t `shouldBe` False
-      Nothing -> True `shouldBe` True
+    newTree `shouldBe` populateTree [8, 7, 6, 1]
   it "searches for a value" $ do
     let tree = populateTree [8, 7, 6, 5, 4, 3, 2, 1]
     search 5 tree `shouldBe` Just 5

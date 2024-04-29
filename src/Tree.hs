@@ -8,15 +8,32 @@ import BasicOps
 data Tree a = E
   | N a (Tree a) (Tree a) deriving (Show, Read, Eq)
 
-extractMin :: Tree a -> (a, Tree a)
-extractMin (N a E r) = (a, r)
-extractMin (N a l r) =
-  let (m, l') = extractMin l in (m, N a l' r)
+extractMin :: Tree a -> Maybe (a, Tree a)
+extractMin E = Nothing
+extractMin (N a E r) = Just (a, r)
+extractMin (N a l r) = do
+  (m, l') <- extractMin l
+  return (m, N a l' r)
 
-extractMax :: Tree a -> (a, Tree a)
-extractMax (N a l E) = (a, l)
-extractMax (N a l r) =
-  let (m, r') = extractMax r in (m, N a l r')
+extractMax :: Tree a -> Maybe (a, Tree a)
+extractMax E = Nothing
+extractMax (N a l E) = Just (a, l)
+extractMax (N a l r) = do
+  (m, r') <- extractMax r
+  return (m, N a l r')
+
+deleteMaybe :: (Ord a) => a -> Tree a -> Maybe (Tree a)
+deleteMaybe x E = Nothing
+deleteMaybe x (N a l r)
+  | x < a = N a <$> deleteMaybe x l <*> pure r
+  | x > a = N a l <$> deleteMaybe x r
+  | otherwise = case (l, r) of
+    (E, E) -> Just E
+    (E, _) -> Just r
+    (_, E) -> Just l
+    otherwise -> do
+      (next, r') <- extractMin r
+      return (N next l r')
 
 instance BasicOps Tree where
   insert x E = N x E E
@@ -25,16 +42,9 @@ instance BasicOps Tree where
     | x < a = N a (insert x l) r
     | x > a = N a l (insert x r)
 
-  delete x E = Nothing
-  delete x (N a l r)
-    | x < a = N a <$> delete x l <*> pure r
-    | x > a = N a l <$> delete x r
-    | otherwise = case (l, r) of
-      (E, E) -> Just E
-      (E, _) -> Just r
-      (_, E) -> Just l
-      (_, _) -> Just $ N next l r'
-        where (next, r') = extractMin r
+  delete x t = case deleteMaybe x t of
+    Just t' -> t'
+    Nothing -> t
 
   search x E = Nothing
   search x (N a l r)
