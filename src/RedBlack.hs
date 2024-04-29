@@ -47,10 +47,11 @@ instance BasicOps RedBlack where
       then (RedBlack (N (a, B) (insert (x, R) l) r))
       else (RedBlack (N (a, B) l (insert (x, R) r)))
   delete x (RedBlack t) = undefined
-  search x (RedBlack t) =
-    let search' x (N (a, _) l r)
-          | x == a = Just a
-          | x < a = search' x l
-          | x > a = search' x r
-    in search' x t
+  search x (RedBlack t)
+    | t == E = Nothing
+    | t@(N (a, _) l r) <- t = if x == a
+      then Just a
+      else if x < a
+        then search x (RedBlack l)
+        else search x (RedBlack r)
   inorder (RedBlack t) = undefined

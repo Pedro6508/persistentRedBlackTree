@@ -6,7 +6,7 @@ module RedBlackSpec
 import Test.Hspec
 import RedBlack (RedBlack(..), Color(..), balance)
 import Tree (Tree(..))
-import BasicOps (insert)
+import BasicOps (insert, search)
 
 populateRedBlack :: [Int] -> RedBlack Int
 populateRedBlack = foldr insert (RedBlack E)
@@ -34,3 +34,9 @@ rbSpec = describe "RedBlack" $ do
     let tree = populateRedBlack [8, 7, 6, 5, 2, 1]
     let hasDoubleRed = findDoubleRed tree
     hasDoubleRed `shouldBe` False
+  it "searches for a value" $ do
+    let tree = populateRedBlack [8, 7, 6, 5, 4, 3, 2, 1]
+    search 5 tree `shouldBe` Just 5
+  it "not find a value" $ do
+    let tree = populateRedBlack [8, 7, 6, 5, 4, 3, 2, 1]
+    search 9 tree `shouldBe` Nothing
