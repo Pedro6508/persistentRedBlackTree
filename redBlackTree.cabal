@@ -27,6 +27,7 @@ library
   exposed-modules:
       BasicOps
       Lib
+      Persistence
       RedBlack
       Tree
   other-modules:
@@ -58,6 +59,7 @@ test-suite redBlackTree-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      PersistenceSpec
       RedBlackSpec
       TreeSpec
       Paths_redBlackTree
