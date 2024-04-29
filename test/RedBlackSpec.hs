@@ -6,7 +6,7 @@ module RedBlackSpec
 import Test.Hspec
 import RedBlack (RedBlack(..), Color(..), balance)
 import Tree (Tree(..))
-import BasicOps (insert, search)
+import BasicOps (insert, search, inorder)
 
 populateRedBlack :: [Int] -> RedBlack Int
 populateRedBlack = foldr insert (RedBlack E)
@@ -40,3 +40,6 @@ rbSpec = describe "RedBlack" $ do
   it "not find a value" $ do
     let tree = populateRedBlack [8, 7, 6, 5, 4, 3, 2, 1]
     search 9 tree `shouldBe` Nothing
+  it "performs an inorder traversal" $ do
+    let tree = populateRedBlack [8, 7, 6, 5, 4, 3, 1]
+    inorder tree `shouldBe` [1, 3, 4, 5, 6, 7, 8]

@@ -54,4 +54,6 @@ instance BasicOps RedBlack where
       else if x < a
         then search x (RedBlack l)
         else search x (RedBlack r)
-  inorder (RedBlack t) = undefined
+  inorder (RedBlack t)
+    | t@(N (a, _) l r) <- t = inorder (RedBlack l) ++ [a] ++ inorder (RedBlack r)
+    | otherwise = []
