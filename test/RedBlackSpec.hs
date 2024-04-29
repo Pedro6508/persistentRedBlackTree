@@ -28,5 +28,9 @@ rbSpec = describe "RedBlack" $ do
     tree' `shouldBe` RedBlack (N (1, B) E (N (2, R) E E))
   it "balance a tree with a red parent and son" $ do
 		let tree = populateRedBlack [3, 4, 5, 1, 2, 5, 6, 7, 9, 10]
-		let hasDoubleRed' = (findDoubleRed . balance) tree
+		let hasDoubleRed' = findDoubleRed (balance tree)
 		hasDoubleRed' `shouldBe` False
+  it "inserts multiple values" $ do
+    let tree = populateRedBlack [8, 7, 6, 5, 2, 1]
+    let hasDoubleRed = findDoubleRed tree
+    hasDoubleRed `shouldBe` False
