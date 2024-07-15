@@ -46,7 +46,17 @@ instance BasicOps RedBlack where
     | t@(N (a, B) l r) <- t = if x < a
       then (RedBlack (N (a, B) (insert (x, R) l) r))
       else (RedBlack (N (a, B) l (insert (x, R) r)))
-  delete x (RedBlack t) = undefined
+  delete x t = mkBlack $ del x t
+    where 
+      mkBlack (RedBlack (N (a, _) l r)) = RedBlack (N (a, B) l r)
+      del x p@(RedBlack (N (y, _) l r)) 
+        | x < y = delL x p
+        | x > y = delR x p
+        | otherwise = fuse l r
+        where 
+          delL x q = undefined
+          delR x q = undefined
+          fuse l r = undefined
   search x (RedBlack t)
     | t == E = Nothing
     | t@(N (a, _) l r) <- t = if x == a
