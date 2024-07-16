@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       BasicOps
+      FileOps
       Lib
       Persistence
       RedBlack
@@ -59,6 +60,7 @@ test-suite redBlackTree-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      FileOpsSpec
       PersistenceSpec
       RedBlackSpec
       TreeSpec
