@@ -37,6 +37,42 @@ balance (RedBlack t)
 	| t@(N (x, B) a (N (z, R) b (N (y, R) c d))) <- t = fmt (x, y, z) (a, b, c, d)
 	| otherwise = RedBlack t
 
+balanceT :: Tree (a, Color) -> Tree (a, Color)
+balanceT t = t'
+  where (RedBlack t') = balance (RedBlack t)
+
+del x t@(N (y, _) l r)
+  | x < y = delL x t
+  | x > y = delR x t
+  | otherwise = fuse l r
+
+delL x t@(N (y, R) t1 t2) = (N (y, R) (del x t1) t2)
+delL x t@(N (y, B) t1 t2) = balL $ (N (y, R) (del x t1) t2)
+
+delR x t@(N (y, R) t1 t2) = (N (y, R) t1 (del x t2))
+delR x t@(N (y, B) t1 t2)= balR $ (N (y, B) t1 (del x t2))
+
+fuse t1@(N (_, B) _ _) (N (y, R) t3 t4) = N (y, R) (fuse t1 t3) t4
+fuse (N (x, R) t1 t2) t3@(N (_, B) _ _) = N (x, R) t1 (fuse t2 t3)
+fuse (N (x, R) t1 t2) (N (y, R) t3 t4) = case r of 
+  (N (z, R) r1 r2) -> (N (z, R) (N (x, R) t1 r1) (N (y, R) r2 t4))
+  (N (_, B) _ _) -> (N (x, R) t1 (N (y, R) r t4))
+  where r = fuse t1 t2
+fuse (N (x, B) t1 t2) (N (y, B) t3 t4) = case r of 
+  (N (z, R) r1 r2) -> (N (z, R) (N (x, B) t1 r1) (N (y, B) r2 t4))
+  (N (z, B) r1 r2) -> (balL (N (x, B) t1 (N (y, B) r t4)))
+  where r = fuse t1 t2
+
+balL (N (y, B) (N (x, R) t1 t2) t3) =(N (y, R) (N (x, B) t1 t2) t3)
+balL (N (x, B) t1 (N (y, B) t2 t3)) = balanceT (N (x, B) t1 (N (y, R) t2 t3))
+balL (N (y, B) t1 (N (z, R) (N (u, B) t2 t3) t4@(N (v, B) l r))) = balanceT (N (u, R) (N (y, B) t1 t2) t3')
+  where t3' = balanceT (N (z, B) t3 (N (v, R) l r))
+
+balR (N (y, B) t1 (N (x, R) t2 t3)) = (N (y, R) t1 (N (x, B) t2 t3))
+balR (N (y, B) (N (z, B) t1 t2) t3) = balanceT (N (y, B) (N (z, R) t1 t2) t3)
+balR (N (y, B) (N (z, R) t1@(N (v, B) l r) (N (u, B) t2 t3)) t4) = N (u, R) t2' (N (y, B) t3 t4)
+  where t2' = balanceT (N (z, B) (N (v, R) l r) t2)
+
 instance BasicOps RedBlack where
   insert x (RedBlack t)
     | t == E = RedBlack (N (x, B) E E)
@@ -46,17 +82,9 @@ instance BasicOps RedBlack where
     | t@(N (a, B) l r) <- t = if x < a
       then (RedBlack (N (a, B) (insert (x, R) l) r))
       else (RedBlack (N (a, B) l (insert (x, R) r)))
-  delete x t = mkBlack $ del x t
-    where 
-      mkBlack (RedBlack (N (a, _) l r)) = RedBlack (N (a, B) l r)
-      del x p@(RedBlack (N (y, _) l r)) 
-        | x < y = delL x p
-        | x > y = delR x p
-        | otherwise = fuse l r
-        where 
-          delL x q = undefined
-          delR x q = undefined
-          fuse l r = undefined
+  delete x (RedBlack t) = mkBlack (del x t)
+    where mkBlack (N (a, _) l r) = RedBlack (N (a, B) l r)
+    
   search x (RedBlack t)
     | t == E = Nothing
     | t@(N (a, _) l r) <- t = if x == a
