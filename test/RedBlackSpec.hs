@@ -6,7 +6,7 @@ module RedBlackSpec
 import Test.Hspec
 import RedBlack (RedBlack(..), Color(..), balance)
 import Tree (Tree(..))
-import BasicOps (insert, search, inorder)
+import BasicOps (insert, search, inorder, delete)
 
 populateRedBlack :: [Int] -> RedBlack Int
 populateRedBlack = foldr insert (RedBlack E)
@@ -26,6 +26,22 @@ rbSpec = describe "RedBlack" $ do
     let tree = RedBlack (N (1, B) E E)
     let tree' = insert 2 tree
     tree' `shouldBe` RedBlack (N (1, B) E (N (2, R) E E))
+  it "delete a node to a tree with a single black node" $ do 
+    let tree = RedBlack (N (1, B) E E) 
+    let tree' = delete 1 tree
+    tree' `shouldBe` RedBlack E
+  it "delete a node to a tree with a red parent and son" $ do 
+    let tree = RedBlack (N (2, B) (N (1, R) E E) E)
+    let tree' = delete 1 tree
+    tree' `shouldBe` RedBlack (N (2, B) E E)
+  it "delete multiple nodes" $ do
+    let tree = populateRedBlack [8, 7, 2, 1, 6, 5, 4, 3]
+    let tree' = foldr delete tree [8, 7, 5, 6, 2]
+    tree' `shouldBe` RedBlack (N (3,B) (N (1,R) E E) (N (4,R) E E))
+  it "delete all nodes" $ do
+    let tree = populateRedBlack [8, 7, 6, 5, 4, 3, 2, 1]
+    let tree' = foldr delete tree [8, 2, 6, 3, 7, 5, 1, 4]
+    tree' `shouldBe` RedBlack E
   it "balance a tree with a red parent and son" $ do
 		let tree = populateRedBlack [3, 4, 5, 1, 2, 5, 6, 7, 9, 10]
 		let hasDoubleRed' = findDoubleRed (balance tree)
