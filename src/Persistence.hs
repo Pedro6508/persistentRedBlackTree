@@ -3,6 +3,9 @@ module Persistence (
   PartialPersistentOps(..),
 ) where
 
+import RedBlack
+import Tree
+
 newtype Version a = Version (a -> a, Maybe (Version a))
 
 class PartialPersistentOps t where
